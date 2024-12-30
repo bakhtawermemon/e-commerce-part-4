@@ -9,13 +9,18 @@ import { Store } from './store/Store';
 import { Provider } from 'react-redux';
 import ProductDetails from './components/product-details/ProductDetails';
 import ProdectsCard from './components/prodect-card/ProdectsCard';
+import ProtectRoute from './components/protect-route/ProtectRoute';
+
+
 
 function App() {
   const router = createBrowserRouter([
-    {  path: "/", element: <AppLayout />,
+    {  path: "/", element: <ProtectRoute> <AppLayout /> </ ProtectRoute >,
       children:[{
         path:'',
-        element: <ProdectsCard  />
+        element:<ProtectRoute> 
+          <ProdectsCard  /> 
+          </ProtectRoute>
       },
       {path:'/product-details/:product_id', element:<ProductDetails />},
       {  path: "/sign-in", element: <SignIn />,  },

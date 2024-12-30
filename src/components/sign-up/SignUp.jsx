@@ -1,171 +1,67 @@
-import {
-  Box,
-  Button,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { useState } from "react";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import logo from "../assets/signup-g.svg";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Link } from "react-router-dom"; // Add this import
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Box, Button, InputAdornment, TextField, Typography } from '@mui/material'
+import React, { useState } from 'react'
+import { Controller, useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import SignUpImage from '../assets/signup-g.svg'
 
-const SignUpSchema = yup.object({
-  firstName: yup.string().required("First name is required"),
-  secondName: yup.string().required("Second name is required"),
-  Email: yup.string().email().required("Email is required"),
-  Password: yup.string().required("Password is required"),
-});
+const schema = yup
+  .object({
+    firstName: yup.string().required("First name is required"),
+    secondName: yup.string().required("Second name is required"),
+    email: yup.string().required("Email is required"),
+    password: yup.string().min(7,"Password must be 7 characters").max(10).required("Password is required"),
+  })
 
 const SignUp = () => {
-  const [showpassword, setshowpassword] = useState(false);
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const [ShowPassword, setShowPassword] = useState(false);
+  const { control, handleSubmit, formState:{errors} } = useForm({
     defaultValues: {
-      firstName: "",
-      secondName: "",
-      Email: "",
-      Password: "",
+      firstName: '',
+      secondName: '',
+      email: '',
+      password: '',
     },
-    resolver: yupResolver(SignUpSchema),
-  });
-
-  console.log(errors, "errors");
-
+    resolver: yupResolver(schema),
+  })
   return (
-    <>
-      <form
-        onSubmit={handleSubmit((data) => {
-          console.log(data);
-        })}
-      >
-        <Box
-          className="vh-100 d-flex justify-content-center align-items-center"
-        >
-          <Box className="d-flex flex-row justify-content-around align-items-center flex-wrap container">
-            {/* Left Side: Image */}
-            <Box className="text-center">
-              <img src={logo} className="img-fluid" alt="Sign Up" />
-            </Box>
 
-            {/* Right Side: Form */}
-            <Box className="text-start p-3" style={{ maxWidth: "400px" }}>
-              <Typography variant="h5">Get Start Shopping</Typography>
-              <Typography variant="body2" className="mb-4">
-                Welcome to FreshCart! Enter your email to get started.
-              </Typography>
+    <Box className='d-flex justify-content-center align-items-center vh-100 '>
+      <Box className='px-5'>
+        <img src={SignUpImage} alt="" />
+      </Box>
+      <Box>
+      <form onSubmit={handleSubmit((data) => {
+        console.log(data);
 
-              <Controller
-                name="firstName"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    error={!!errors?.firstName}
-                    {...field}
-                    size="small"
-                    className="my-2"
-                    fullWidth
-                    type="text"
-                    placeholder="First name"
-                  />
-                )}
-              />
-              <Typography className="text-danger text-start">
-                {errors?.firstName?.message}
-              </Typography>
-
-              <Controller
-                name="secondName"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    error={!!errors?.secondName}
-                    {...field}
-                    size="small"
-                    className="my-2"
-                    fullWidth
-                    type="text"
-                    placeholder="Second name"
-                  />
-                )}
-              />
-              <Typography className="text-danger text-start">
-                {errors?.secondName?.message}
-              </Typography>
-
-              <Controller
-                name="Email"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    error={!!errors?.Email}
-                    {...field}
-                    size="small"
-                    className="my-2"
-                    fullWidth
-                    type="email"
-                    placeholder="Email"
-                  />
-                )}
-              />
-              <Typography className="text-danger text-start">
-                {errors?.Email?.message}
-              </Typography>
-
-              <Controller
-                name="Password"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    error={!!errors?.Password}
-                    {...field}
-                    size="small"
-                    className="my-2"
-                    fullWidth
-                    type={showpassword ? "text" : "password"}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment
-                          position="end"
-                          onClick={() => setshowpassword(!showpassword)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {showpassword ? (
-                            <VisibilityIcon />
-                          ) : (
-                            <VisibilityOffIcon />
-                          )}
-                        </InputAdornment>
-                      ),
-                    }}
-                    placeholder="Password"
-                  />
-                )}
-              />
-              <Typography className="text-danger text-start">
-                {errors?.Password?.message}
-              </Typography>
-
-              <Button type="submit" size="small" fullWidth variant="contained">
-                Sign Up
-              </Button>
-              <Typography className="mt-3 text-start" variant="body2">
-              Don’t have an account? <Link to="/sign-in"> SignIn</Link>
-            </Typography>
-            </Box>
-           
-          </Box>
+      })}>
+        <Box>
+          <Typography className='fw-bold' variant='h4'>Get Start Shopping</Typography>
+          <Typography variant='h6'>Welcome to FreshCart! Enter your email to get started.</Typography>
+         <Box className='my-3'> <Controller control={control} name="firstName" render={({ field }) => (<TextField  error={errors?.firstName ? true : false}  placeholder='First Name' size='small' fullWidth {...field} />)} />
+         <Typography className='text-danger'>{errors?.firstName?.message}</Typography></Box>
+          <Box><Controller control={control} name="secondName" render={({ field }) => (<TextField error={errors?.secondName ? true : false} placeholder='Second Name' size='small' fullWidth {...field} />)} />
+          <Typography className='text-danger'>{errors?.secondName?.message}</Typography></Box>
+          <Box className='my-3'><Controller control={control} name="email" render={({ field }) => (<TextField error={errors?.email ? true : false} placeholder='Email' size='small' fullWidth {...field} />)} />
+          <Typography className='text-danger'>{errors?.email?.message}</Typography></Box>
+         <Box> <Controller control={control} name="password" render={({ field }) => ( <TextField error={errors?.password ? true : false} placeholder='Password' size='small' type={ShowPassword ? 'text' : 'Password'} slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="start" onClick={() => setShowPassword(!ShowPassword)} >
+                  {ShowPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </InputAdornment>
+              ),
+            },
+          }} fullWidth {...field} />)} />
+          <Typography className='text-danger'>{errors?.password?.message}</Typography></Box>
+          <Button className='my-3' type='submit' fullWidth variant='contained' >Sign Up</Button>
         </Box>
       </form>
-    </>
-  );
-};
+      </Box>
+    </Box>
+  )
+}
 
 export default SignUp;

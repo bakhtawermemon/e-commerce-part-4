@@ -7,40 +7,43 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 const CartList = (props) => {
-  const {openCartList, toggleCartLiist} = props;
+  const { openCartList, toggleCartLiist } = props;
 
-  const {cartItems} = useSelector((state)=>state.cart)
+  const { cartItems } = useSelector((state) => state.cart)
 
   const dispatch = useDispatch()
 
+  const totalPrice = cartItems.reduce((acc, sum) => sum.price * sum.quantity + acc, 0)
+
   console.log(cartItems);
-  
+
 
   return (
     <>
-        <Drawer open={openCartList} onClose={toggleCartLiist(false)}>
-       <Box  sx={{width:'380px',}}>
-       <Typography variant='h5' textAlign={'center'}>Cart List</Typography>
-       {cartItems?.map((item)=>{
-        return(
-          <Box className='row py-2' sx={{  padding: '0px', margin: '0px'}}>
-           <Box className='col-9 d-flex'>
-           <img className='mx-2' width={'60px'} src={item?.image} alt="" />
-            <Box>
-             <Tooltip title={item?.title}> <Typography>{item?.title?.length > 25 ? `${item?.title.slice(0, 20)}...` : item?.title}</Typography></Tooltip>
-              <Typography>{item.category}</Typography>
-              <Typography>{item.price}<span>Qty{item?.quantity}</span></Typography>
-            </Box>
-           </Box>
-           <Box className='col-3 d-flex flex-column'>
-            <Button onClick={()=>dispatch(decreaseQuantity(item))} variant='outlined' size='small' color='error'><RemoveIcon /></Button>
-            <Button onClick={()=>dispatch(increaseQuantity(item))} className='my-1' variant='outlined' size='small' color='success'><AddCircleIcon /></Button>
-            <Button onClick={()=>dispatch(deleteProdut(item))} variant='outlined' size='small' color='error'><DeleteIcon /></Button>
-           </Box>
-          </Box>
-        )
-       })}
-       </Box>
+      <Drawer open={openCartList} onClose={toggleCartLiist(false)}>
+        <Box className='position-relative' sx={{ width: '380px', height: '100vh' }}>
+          <Typography variant='h5' textAlign={'center'}>Cart List</Typography>
+          {cartItems?.map((item) => {
+            return (
+              <Box className='row py-2' sx={{ padding: '0px', margin: '0px' }}>
+                <Box className='col-9 d-flex'>
+                  <img className='mx-2' width={'60px'} src={item?.image} alt="" />
+                  <Box>
+                    <Tooltip title={item?.title}> <Typography>{item?.title?.length > 25 ? `${item?.title.slice(0, 20)}...` : item?.title}</Typography></Tooltip>
+                    <Typography>{item.category}</Typography>
+                    <Typography>Price: ${item.price} <span>Qty{item?.quantity}</span></Typography>
+                  </Box>
+                </Box>
+                <Box className='col-3 d-flex flex-column'>
+                  <Button onClick={() => dispatch(decreaseQuantity(item))} variant='outlined' size='small' color='error'><RemoveIcon /></Button>
+                  <Button onClick={() => dispatch(increaseQuantity(item))} className='my-1' variant='outlined' size='small' color='success'><AddCircleIcon /></Button>
+                  <Button onClick={() => dispatch(deleteProdut(item))} variant='outlined' size='small' color='error'><DeleteIcon /></Button>
+                </Box>
+              </Box>
+            )
+          })}
+          <Button className='position-absolute bottom-0' variant='contained' fullWidth>Total Price: ${totalPrice}</Button>
+        </Box>
       </Drawer>
     </>
   )
